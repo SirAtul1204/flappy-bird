@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Bird from "./components/Bird";
 import Ground from "./components/Ground";
 import PipePair from "./components/PipePair";
+import Label from "./components/Label";
+import Score from "./components/Score";
 
 class App extends Component {
   state = {
@@ -19,15 +21,29 @@ class App extends Component {
     cnt: 0,
     birdRotate: 0,
     score: 0,
+    speedIncreaser: 1,
+    LabelVisible: true,
+    LabelText1: "Press Enter to Start",
+    LabelText2: "Space to Jump",
+    enterAllowed: true,
   };
 
   btnPressed = (e) => {
     if (e.key === "Enter") {
-      // console.log("Started");
-      let gameTimer = setInterval(this.useEffect, 16.66);
-      this.setState({ gameTimer: gameTimer });
-      let birdTimer = setInterval(this.birdMoveDown, 16.66);
-      this.setState({ birdTimer: birdTimer });
+      if (this.state.enterAllowed) {
+        let gameTimer = setInterval(this.useEffect, 16.66);
+        let birdTimer = setInterval(this.birdMoveDown, 16.66);
+        let LabelVisible = false;
+        let enterAllowed = false;
+        this.setState({
+          gameTimer: gameTimer,
+          birdTimer: birdTimer,
+          LabelVisible: LabelVisible,
+          enterAllowed: enterAllowed,
+        });
+      } else {
+        window.location.reload();
+      }
     }
 
     if (e.key === " ") {
@@ -71,6 +87,14 @@ class App extends Component {
     if (this.state.birdPos > 600) {
       clearInterval(this.state.gameTimer);
       clearInterval(this.state.birdTimer);
+      let LabelText1 = "Game Over";
+      let LabelText2 = " ";
+      let LabelVisible = true;
+      this.setState({
+        LabelText1: LabelText1,
+        LabelText2: LabelText2,
+        LabelVisible: LabelVisible,
+      });
     }
 
     //Game Over by 1st Upper Pipe
@@ -81,6 +105,14 @@ class App extends Component {
     ) {
       clearInterval(this.state.gameTimer);
       clearInterval(this.state.birdTimer);
+      let LabelText1 = "Game Over";
+      let LabelText2 = " ";
+      let LabelVisible = true;
+      this.setState({
+        LabelText1: LabelText1,
+        LabelText2: LabelText2,
+        LabelVisible: LabelVisible,
+      });
     }
 
     //Game Over by 1st Lower Pipe
@@ -92,6 +124,14 @@ class App extends Component {
     ) {
       clearInterval(this.state.gameTimer);
       clearInterval(this.state.birdTimer);
+      let LabelText1 = "Game Over";
+      let LabelText2 = " ";
+      let LabelVisible = true;
+      this.setState({
+        LabelText1: LabelText1,
+        LabelText2: LabelText2,
+        LabelVisible: LabelVisible,
+      });
     }
 
     //Game over by 2nd Upper Pipe
@@ -102,6 +142,14 @@ class App extends Component {
     ) {
       clearInterval(this.state.gameTimer);
       clearInterval(this.state.birdTimer);
+      let LabelText1 = "Game Over";
+      let LabelText2 = " ";
+      let LabelVisible = true;
+      this.setState({
+        LabelText1: LabelText1,
+        LabelText2: LabelText2,
+        LabelVisible: LabelVisible,
+      });
     }
 
     //Game over by 2nd Lower Pipe
@@ -113,6 +161,14 @@ class App extends Component {
     ) {
       clearInterval(this.state.gameTimer);
       clearInterval(this.state.birdTimer);
+      let LabelText1 = "Game Over";
+      let LabelText2 = " ";
+      let LabelVisible = true;
+      this.setState({
+        LabelText1: LabelText1,
+        LabelText2: LabelText2,
+        LabelVisible: LabelVisible,
+      });
     }
   };
 
@@ -120,13 +176,14 @@ class App extends Component {
     if (this.state.pipepos1 === 10 || this.state.pipepos2 === 10) {
       let score = this.state.score + 1;
       this.setState({ score: score });
+      this.increaseGameSpeed();
     }
   };
 
   increaseGameSpeed = () => {
     let score = this.state.score;
-    if (score % 5 === 0) {
-      let speed = this.state.speed + 0.05;
+    if (score % 5 === 0 && score !== 0) {
+      let speed = this.state.speed + this.state.speedIncreaser;
       this.setState({ speed: speed });
     }
   };
@@ -162,6 +219,17 @@ class App extends Component {
 
   render() {
     // console.log(this.state.randomLength1);
+    let LabelVisible = this.state.LabelVisible;
+    const renderLabel = () => {
+      if (LabelVisible) {
+        return (
+          <Label
+            LabelText1={this.state.LabelText1}
+            LabelText2={this.state.LabelText2}
+          />
+        );
+      }
+    };
     return (
       <React.Fragment>
         <div id="mainGame" tabIndex="0" onKeyDown={this.btnPressed}>
@@ -178,18 +246,15 @@ class App extends Component {
             upperPipeLength={this.state.randomLength2}
             pos={this.state.pipepos2}
           />
-
+          <Score score={this.state.score} />
+          {renderLabel()}
           <span className="btnHoldingSpan m-2">
             <button
               className="btn btn-info m-2 myBtn"
-              style={{ width: 280, marginLeft: 4 }}
+              style={{ width: 570, marginLeft: 4 }}
               onClick={this.restart}
             >
               Restart
-            </button>
-
-            <button className="btn btn-success m-2" style={{ width: 280 }}>
-              Score: {this.state.score}
             </button>
           </span>
         </div>

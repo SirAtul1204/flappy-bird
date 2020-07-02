@@ -7,4 +7,5 @@ import "./App.css";
 window.onload = function () {
   document.getElementById("mainGame").focus();
 };
+
 ReactDOM.render(<App />, document.getElementById("root"));

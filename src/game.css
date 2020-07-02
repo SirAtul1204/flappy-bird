@@ -33,3 +33,30 @@
   position: absolute;
   top: 800px;
 }
+
+.Label1 {
+  position: absolute;
+  left: 145px;
+  top: 258px;
+  font-family: "Notable", sans-serif;
+  color: #ffffff;
+  font-size: 20px;
+}
+
+.Label2 {
+  position: absolute;
+  left: 187px;
+  top: 305px;
+  font-family: "Notable", sans-serif;
+  color: #ffffff;
+  font-size: 20px;
+}
+
+.score {
+  position: absolute;
+  font-family: "Notable", sans-serif;
+  color: #ffffff;
+  left: 2px;
+  top: -18px;
+  font-size: 49px;
+}
