@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import bird from "../images/bird.png";
 import "../game.css";
+
 class Bird extends Component {
   render() {
     return (

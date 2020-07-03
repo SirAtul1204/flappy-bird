@@ -28,7 +28,9 @@ class App extends Component {
     enterAllowed: true,
   };
 
+  //Function called when pressed a keyboard input is given
   btnPressed = (e) => {
+    //Enter to start the game
     if (e.key === "Enter") {
       if (this.state.enterAllowed) {
         let gameTimer = setInterval(this.useEffect, 16.66);
@@ -41,17 +43,20 @@ class App extends Component {
           LabelVisible: LabelVisible,
           enterAllowed: enterAllowed,
         });
+        //Pressing Enter more than once reloads the game
       } else {
         window.location.reload();
       }
     }
 
+    //Function which ultimately calls birdMoveUp()
     if (e.key === " ") {
       let birdFalling = false;
       this.setState({ birdFalling: birdFalling });
     }
   };
 
+  //Function called repeatedly (simulating Gravity)
   birdMoveDown = () => {
     if (this.state.birdFalling === true) {
       let birdPos = this.state.birdPos + this.state.birdFall;
@@ -64,6 +69,7 @@ class App extends Component {
     }
   };
 
+  //Function to make Bird Jump
   birdMoveUp = () => {
     let birdPos = this.state.birdPos - 8;
     let cnt = this.state.cnt + 1;
@@ -82,19 +88,24 @@ class App extends Component {
     }
   };
 
+  stopGame = () => {
+    clearInterval(this.state.gameTimer);
+    clearInterval(this.state.birdTimer);
+    let LabelText1 = "Game Over";
+    let LabelText2 = " ";
+    let LabelVisible = true;
+    this.setState({
+      LabelText1: LabelText1,
+      LabelText2: LabelText2,
+      LabelVisible: LabelVisible,
+    });
+  };
+
+  //Collison detection, if condition met calls the stopGame()
   collide = () => {
     //Dying Part
     if (this.state.birdPos > 600) {
-      clearInterval(this.state.gameTimer);
-      clearInterval(this.state.birdTimer);
-      let LabelText1 = "Game Over";
-      let LabelText2 = " ";
-      let LabelVisible = true;
-      this.setState({
-        LabelText1: LabelText1,
-        LabelText2: LabelText2,
-        LabelVisible: LabelVisible,
-      });
+      this.stopGame();
     }
 
     //Game Over by 1st Upper Pipe
@@ -103,16 +114,7 @@ class App extends Component {
       this.state.pipepos1 + 52 > 58 &&
       this.state.birdPos < this.state.randomLength1 - 20
     ) {
-      clearInterval(this.state.gameTimer);
-      clearInterval(this.state.birdTimer);
-      let LabelText1 = "Game Over";
-      let LabelText2 = " ";
-      let LabelVisible = true;
-      this.setState({
-        LabelText1: LabelText1,
-        LabelText2: LabelText2,
-        LabelVisible: LabelVisible,
-      });
+      this.stopGame();
     }
 
     //Game Over by 1st Lower Pipe
@@ -122,16 +124,7 @@ class App extends Component {
       this.state.birdPos >
         2 * this.state.randomLength1 + 116 - this.state.randomLength1 - 47
     ) {
-      clearInterval(this.state.gameTimer);
-      clearInterval(this.state.birdTimer);
-      let LabelText1 = "Game Over";
-      let LabelText2 = " ";
-      let LabelVisible = true;
-      this.setState({
-        LabelText1: LabelText1,
-        LabelText2: LabelText2,
-        LabelVisible: LabelVisible,
-      });
+      this.stopGame();
     }
 
     //Game over by 2nd Upper Pipe
@@ -140,16 +133,7 @@ class App extends Component {
       this.state.pipepos2 + 52 > 58 &&
       this.state.birdPos < this.state.randomLength2 - 20
     ) {
-      clearInterval(this.state.gameTimer);
-      clearInterval(this.state.birdTimer);
-      let LabelText1 = "Game Over";
-      let LabelText2 = " ";
-      let LabelVisible = true;
-      this.setState({
-        LabelText1: LabelText1,
-        LabelText2: LabelText2,
-        LabelVisible: LabelVisible,
-      });
+      this.stopGame();
     }
 
     //Game over by 2nd Lower Pipe
@@ -159,19 +143,11 @@ class App extends Component {
       this.state.birdPos >
         2 * this.state.randomLength2 + 116 - this.state.randomLength2 - 47
     ) {
-      clearInterval(this.state.gameTimer);
-      clearInterval(this.state.birdTimer);
-      let LabelText1 = "Game Over";
-      let LabelText2 = " ";
-      let LabelVisible = true;
-      this.setState({
-        LabelText1: LabelText1,
-        LabelText2: LabelText2,
-        LabelVisible: LabelVisible,
-      });
+      this.stopGame();
     }
   };
 
+  //Function that updates the Score and also called increaseGameSpeed() after every 5 score
   getScore = () => {
     if (this.state.pipepos1 === 10 || this.state.pipepos2 === 10) {
       let score = this.state.score + 1;
@@ -180,6 +156,7 @@ class App extends Component {
     }
   };
 
+  //Function to increase the Pipes left velocity, agter every 5 score
   increaseGameSpeed = () => {
     let score = this.state.score;
     if (score % 5 === 0 && score !== 0) {
@@ -188,6 +165,7 @@ class App extends Component {
     }
   };
 
+  //This get called in every 16.66 milliSeconds which is(60 FPS)
   useEffect = () => {
     let pipepos1 = this.state.pipepos1 - this.state.speed;
     let pipepos2 = this.state.pipepos2 - this.state.speed;
@@ -204,21 +182,18 @@ class App extends Component {
       let randomLength2 = Math.floor(Math.random() * (450 - 50 + 1) + 50);
       this.setState({ pipepos2: pipepos2, randomLength2: randomLength2 });
     }
-    // console.log(this.state.pipepos1);
 
     this.collide();
 
     this.getScore();
-
-    // this.render();
   };
 
+  //Restart Function just reloads the webpage
   restart = () => {
     window.location.reload();
   };
 
   render() {
-    // console.log(this.state.randomLength1);
     let LabelVisible = this.state.LabelVisible;
     const renderLabel = () => {
       if (LabelVisible) {
